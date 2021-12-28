@@ -13,7 +13,11 @@ dependencies:
   sqflite_sqlcipher: ^2.0.0
   synchronized: ^3.0.0
   path: ^1.8.0
-  sqfentity_gen: '>=2.1.2+7 <3.0.0'
+  # sqfentity_gen: '>=2.1.2+7 <3.0.0'
+  sqfentity_gen:
+    git:
+      url: git://github.com/bynalab/sqfEntity.git
+      path: sqfentity_gen
   sqflite_common: ^2.0.1+1
   sqflite_common_ffi: ^2.0.0+3
   meta: ^1.7.0
