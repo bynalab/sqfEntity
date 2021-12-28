@@ -327,7 +327,11 @@ class SqfEntityProvider extends SqfEntityModelBase {
       T.saveResult = BoolResult(
           success: true,
           successMessage: '$_tableName-> update: added to batch successfully');
-      return 0;
+      // return 0;
+    }
+
+    if (_dbModel!.postSaveAction != null) {
+      T = await _dbModel!.postSaveAction!(_tableName!, T as TableBase);
     }
   }
 
@@ -365,7 +369,11 @@ class SqfEntityProvider extends SqfEntityModelBase {
       return result;
     } else {
       openedBatch[_dbModel!.databaseName]!.insert(_tableName!, data);
-      return null;
+      // return null;
+    }
+
+    if (_dbModel!.postSaveAction != null) {
+      T = await _dbModel!.postSaveAction!(_tableName!, T as TableBase);
     }
   }
 
@@ -880,11 +888,9 @@ List<String> checkTableColumns(
 
 /// Create DB Model from DB
 Future<SqfEntityModelBase> convertDatabaseToModelBase(
-    SqfEntityModelProvider model , {
-      String? bundledDatabasePath,
-      String? databasePath
-    }
-  ) async {
+    SqfEntityModelProvider model,
+    {String? bundledDatabasePath,
+    String? databasePath}) async {
   final bundledDbModel = SqfEntityProvider(model);
   final tableList = await bundledDbModel
       //.execDataTable('SELECT name,type FROM sqlite_master WHERE type=\'table\' or type=\'view\'');
@@ -900,15 +906,13 @@ Future<SqfEntityModelBase> convertDatabaseToModelBase(
   //  tables.remove(table);
   //}
 
-  return
-    ConvertedModel()
-      ..databaseName = model.databaseName
-      ..modelName = toModelName(model.databaseName!.replaceAll('.', ''), '')
-      ..databaseTables = tables
-      ..password = model.password
-      ..bundledDatabasePath = bundledDatabasePath
-      ..databasePath = databasePath
-  ;
+  return ConvertedModel()
+    ..databaseName = model.databaseName
+    ..modelName = toModelName(model.databaseName!.replaceAll('.', ''), '')
+    ..databaseTables = tables
+    ..password = model.password
+    ..bundledDatabasePath = bundledDatabasePath
+    ..databasePath = databasePath;
 }
 
 /// Method for Creating DB Model from DB

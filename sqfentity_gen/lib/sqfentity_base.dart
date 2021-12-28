@@ -332,6 +332,8 @@ class SqfEntityFieldRelationship implements SqfEntityField {
 }
 
 typedef PreSaveAction = Future<TableBase> Function(String tableName, TableBase);
+typedef PostSaveAction = Future<TableBase> Function(
+    String tableName, TableBase);
 
 /// Log events on failure of insert/update operation
 ///    Example:
@@ -390,6 +392,7 @@ class SqfEntityModel {
       this.dbVersion,
       this.defaultColumns,
       this.preSaveAction,
+      this.postSaveAction,
       this.logFunction});
 
   /// Declare your sqlite database name
@@ -439,6 +442,23 @@ class SqfEntityModel {
   /// ```
   final PreSaveAction? preSaveAction;
 
+  /// Action Execute post save. (Perform actions after each insert/update)
+  ///
+  /// Example:
+  /// ```
+  ///    @SqfEntityBuilder(myDbModel)
+  ///    const myDbModel = SqfEntityModel(
+  ///        ...
+  ///        postSaveAction: getPostSaveAction,
+  ///    );
+  ///    Future<TableBase> getPostSaveAction(String tableName, obj) async {
+  ///       // Update the lastUpdate column on all records before saving
+  ///       obj.lastUpdate = DateTime.now()
+  ///       return obj;
+  ///    }
+  /// ```
+  final PostSaveAction? postSaveAction;
+
   /// Log events on failure of insert/update operation
   final LogFunction? logFunction;
 }
@@ -468,6 +488,7 @@ class SqfEntityModelConverter {
       ..sequences = toSequences()
       ..bundledDatabasePath = model.bundledDatabasePath
       ..preSaveAction = model.preSaveAction
+      ..postSaveAction = model.postSaveAction
       ..logFunction = model.logFunction
       ..init();
   }
@@ -2685,8 +2706,7 @@ Future<List<String>> toListString([VoidCallback Function(List<String> o)? listSt
     if (_table.primaryKeyName != null &&
         _table.primaryKeyName!.isNotEmpty &&
         !_table.primaryKeyName!.startsWith('_')) {
-      retVal
-          .writeln('''${_table.modelName}Field? _${_table.primaryKeyNames[0]};
+      retVal.writeln('''${_table.modelName}Field? _${_table.primaryKeyNames[0]};
 ${_table.modelName}Field get ${_table.primaryKeyNames[0]} {
 return _${_table.primaryKeyNames[0]} = setField(_${_table.primaryKeyNames[0]}, '${_table.primaryKeyNames[0]}', ${DbType.integer.toString()});
 }''');
@@ -3935,6 +3955,7 @@ abstract class SqfEntityModelBase {
 
   /// Action Execute pre save
   PreSaveAction? preSaveAction;
+  PostSaveAction? postSaveAction;
 
   LogFunction? logFunction;
 
