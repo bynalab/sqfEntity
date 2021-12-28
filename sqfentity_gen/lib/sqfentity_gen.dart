@@ -513,6 +513,7 @@ class ${_m.modelName} extends SqfEntityModelProvider {
     databaseName = $_dbName;
     $_dbPassword $_dbVersion
     preSaveAction = ${_m.instanceName}.preSaveAction;
+    postSaveAction = ${_m.instanceName}.postSaveAction;
     logFunction = ${_m.instanceName}.logFunction;
     $__tableList
     $__sequenceList
@@ -690,7 +691,7 @@ class Sequence${seq.modelName} extends SqfEntitySequenceBase {
         continue;
       }
       final String commonProperties =
-          '${_getNullableValueField(field.defaultValue, 'defaultValue')}${field.isPrimaryKeyField ?? false ? _getNullableValueField(field.isPrimaryKeyField, 'isPrimaryKeyField') : ''}${field.isPrimaryKeyField != null && field.isPrimaryKeyField == true ? '' : _getNullableValueField(field.isUnique == false ? null : field.isUnique , 'isUnique')}${field.isPrimaryKeyField != null && field.isPrimaryKeyField == true ? '' : _getNullableValueField(field.isNotNull == false ? null : field.isNotNull, 'isNotNull')}${field.isPrimaryKeyField != null && field.isPrimaryKeyField == true ? '' : _getNullableValueField(field.isIndex == false ? null : field.isIndex, 'isIndex')}${_getNullableValueField(field.isIndexGroup, 'isIndexGroup')}${_getNullableValueField(field.checkCondition, 'checkCondition')}${_getNullableValueField(field.minValue, 'minValue')}${_getNullableValueField(field.maxValue, 'maxValue')}${_getNullableValueField(field.collate, 'collate')}';
+          '${_getNullableValueField(field.defaultValue, 'defaultValue')}${field.isPrimaryKeyField ?? false ? _getNullableValueField(field.isPrimaryKeyField, 'isPrimaryKeyField') : ''}${field.isPrimaryKeyField != null && field.isPrimaryKeyField == true ? '' : _getNullableValueField(field.isUnique == false ? null : field.isUnique, 'isUnique')}${field.isPrimaryKeyField != null && field.isPrimaryKeyField == true ? '' : _getNullableValueField(field.isNotNull == false ? null : field.isNotNull, 'isNotNull')}${field.isPrimaryKeyField != null && field.isPrimaryKeyField == true ? '' : _getNullableValueField(field.isIndex == false ? null : field.isIndex, 'isIndex')}${_getNullableValueField(field.isIndexGroup, 'isIndexGroup')}${_getNullableValueField(field.checkCondition, 'checkCondition')}${_getNullableValueField(field.minValue, 'minValue')}${_getNullableValueField(field.maxValue, 'maxValue')}${_getNullableValueField(field.collate, 'collate')}';
       if (field is SqfEntityFieldVirtualBase) {
         strFields.writeln(
             'SqfEntityFieldVirtualBase(\'${field.fieldName}\', ${field.dbType.toString()}),');
